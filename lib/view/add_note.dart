@@ -83,6 +83,8 @@ class _AddNotesState extends State<AddNotes> {
                 controller: homeController.titleController,
                 minLines: 1,
                 maxLines: 4,
+
+
                 cursorColor: Colors.white,
                 style: const TextStyle(color: Colors.white, fontSize: 30),
                 decoration: const InputDecoration(
@@ -167,7 +169,11 @@ showDiologeSave(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      BtnB(onTap: () {}, text: "Discard"),
+                      BtnB(onTap: () {
+                        homeController.titleController.text="";
+                        homeController.descriptionController.text="";
+                        GoRouter.of(context).go('/home');
+                      }, text: "Discard"),
                       BtnB(
                         onTap: () {
                           homeController.uploadData(context);

@@ -173,7 +173,11 @@ class _UpdateNotesState extends State<UpdateNotes> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        BtnB(onTap: () {}, text: "Discard"),
+                        BtnB(onTap: () {
+                          homeController.titleController.text="";
+                          homeController.descriptionController.text="";
+                          GoRouter.of(context).go('/home');
+                        }, text: "Discard"),
                         BtnB(
                           onTap: () {
                             homeController.upgradeData(context,key);

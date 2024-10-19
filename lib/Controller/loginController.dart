@@ -31,24 +31,46 @@ import 'home_controller.dart';
 // }
 
 class LoginState extends GetxController {
-  final Rx<TextEditingController> emailController = TextEditingController().obs;
-  final Rx<TextEditingController> passController = TextEditingController().obs;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passController = TextEditingController();
   HomeController homeController = Get.put(HomeController());
 
-  /// Loding
-  RxBool loding = false.obs;
+  /// Loading
+ final RxBool loading = false.obs;
 
-  void setLoding(bool lod) {
-    loding.value = lod;
+  void setLoading(bool lod) {
+    loading.value = lod;
   }
+  @override
+  void dispose() {
+
+    super.dispose();
+    emailController.dispose();
+    passController.dispose();
+  }
+
+ final RxBool _eyes = true.obs;
+
+  get isEyesEnable => _eyes.value;
+
+  void setEyes() {
+    if (_eyes.value == false) {
+      _eyes.value = true;
+    } else if (_eyes.value == true) {
+      _eyes.value = false;
+    }
+
+  }
+
+
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
 
 
-
+/// login
   void login(BuildContext context) {
-    setLoding(true);
+    setLoading(true);
     auth
         .signInWithEmailAndPassword(
         email: emailController.value.text,
@@ -60,16 +82,15 @@ class LoginState extends GetxController {
 
 
       Utils().ErrorMesege("Log In ");
-      emailController.value.clear();
-      passController.value.clear();
+
       homeController.fetchData();
 
      GoRouter.of(context).go("/home");
 
-      setLoding(false);
+      setLoading(false);
     }).onError((error, stackTrace) {
       Utils().ErrorMesege(error.toString());
-      setLoding(false);
+      setLoading(false);
     });
   }
 }

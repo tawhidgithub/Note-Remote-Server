@@ -35,20 +35,23 @@ class HomeController extends GetxController {
           if (data.isNotEmpty) {
             data.forEach((key, value) {
               if (value is Map<Object?, dynamic>) {
-                NotesModel notesModle = NotesModel(
+                NotesModel notesModel = NotesModel(
                     title: value['title'],
                     description: value['description'],
                     id: value['id'],
                     key: value['key']);
-                notesList.add(notesModle);
+                notesList.add(notesModel);
               }
             });
           }
         } else {
-          Utils().ErrorMesege('No data available for the user.');
+
+          if (kDebugMode) {
+            print("________________________No data available for the user.");
+          }
         }
       }).onError((error, context) {
-        Utils().ErrorMesege(error.toString());
+
         if (kDebugMode) {
           print("________________________$error");
         }
@@ -85,6 +88,7 @@ class HomeController extends GetxController {
       print("Fatch Error is $e");
     }
   }
+
 
   /// upgrade notes
   void upgradeData(BuildContext context, key) async {

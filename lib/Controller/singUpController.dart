@@ -15,32 +15,50 @@ import '../view/home_page.dart';
 ///Sing up
 
 class SingUpState extends GetxController {
-  final Rx<TextEditingController> emailController = TextEditingController().obs;
-  final Rx<TextEditingController> passController = TextEditingController().obs;
-  final Rx<TextEditingController> firstNameController =
-      TextEditingController().obs;
-  final Rx<TextEditingController> lastNameController =
-      TextEditingController().obs;
-  final Rx<TextEditingController> userNameController =
-      TextEditingController().obs;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passController = TextEditingController();
+  final TextEditingController firstNameController =
+      TextEditingController();
+  final TextEditingController lastNameController =
+      TextEditingController();
+  final TextEditingController userNameController =
+      TextEditingController();
 
-  // Loging
-  RxBool lodind = false.obs;
+
+
+
+
+
+
+  // Loading
+    RxBool loading = false.obs;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   DatabaseReference ref = FirebaseDatabase.instance.ref().child("User");
 
+
+
+  @override
+  void dispose() {
+
+    super.dispose();
+    emailController.dispose();
+    passController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    userNameController.dispose();
+  }
   // Obscure Text
 
-  bool _eyes = true;
+ final RxBool _eyes = true.obs;
 
-  get eyes => _eyes;
+  get isEyesEnable => _eyes.value;
 
   void setEyes() {
-    if (_eyes == false) {
-      _eyes = true;
-    } else if (_eyes == true) {
-      _eyes = false;
+    if (_eyes.value == false) {
+      _eyes.value = true;
+    } else if (_eyes.value == true) {
+      _eyes.value = false;
     }
 
 
@@ -48,8 +66,8 @@ class SingUpState extends GetxController {
 
 
 
-  void setLoding(bool lod) {
-    lodind.value = lod;
+  void setLoading(bool lod) {
+    loading.value = lod;
   }
 
   /// Sing Up
@@ -58,7 +76,7 @@ class SingUpState extends GetxController {
     // var ID=DateTime.now().microsecondsSinceEpoch.toString();
 
 
-    setLoding(true);
+    setLoading(true);
     _auth
         .createUserWithEmailAndPassword(
         email: emailController.value.text,
@@ -81,11 +99,7 @@ class SingUpState extends GetxController {
 
       })
           .then((value) {
-        emailController.value.clear();
-        passController.value.clear();
-        firstNameController.value.clear();
-        lastNameController.value.clear();
-        userNameController.value.clear();
+
         GoRouter.of(context).go('/loginScreen');
 
 
@@ -96,9 +110,9 @@ class SingUpState extends GetxController {
       Utils().ErrorMesege("Register is Successful");
       Get.to( HomePage(),duration: const Duration(seconds: 2));
 
-      setLoding(false);
+      setLoading(false);
     }).onError((error, stackTrace) {
-      setLoding(false);
+      setLoading(false);
       Utils().ErrorMesege(error.toString());
 
 
